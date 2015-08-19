@@ -8,13 +8,15 @@
     - python-dev
     - python-pip
     - postgresql-client
+    - postgresql-contrib
     - libpq-dev
     - python-pip
     - python-psycopg2
     - git
+    - libmemcached-dev
 
 - name: Clone Django Repository
-  git: repo=https://github.com/cewing/djangoblog_uwpce.git dest={{ django_home }} force=yes
+  git: repo=https://github.com/tpeek/django-imager.git dest={{ django_home }} force=yes
 
 - name: Install Python Dependencies
   sudo: yes
@@ -28,7 +30,6 @@
 
 - name: Get DB Password
   include_vars: secrets.yml
-
 
 - name: Set DB URL
   set_fact: 
