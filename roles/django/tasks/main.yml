@@ -9,24 +9,26 @@
     - python-pip
     - postgresql-client
     - postgresql-contrib
+    - postgresql-9.3-postgis-2.1
+    - postgresql-9.3-postgis-scripts    
     - libpq-dev
     - python-pip
     - python-psycopg2
     - git
     - libmemcached-dev
+    - binutils
+    - libproj-dev
+    - gdal-bin
+    - cgi-mapserver
 
-- name: Clone Django Repository
-  git: repo=https://github.com/tpeek/django-imager.git dest={{ django_home }} force=yes
+# - name: Clone Django Repository
+#   git: repo=https://github.com/tpeek/django-imager.git dest={{ django_home }} force=yes
 
 - name: Install Python Dependencies
   sudo: yes
   pip:
     state: present
-    requirements: "{{ django_home }}/requirements.txt"
-
-- name: Get DB Hostvars
-  set_fact:
-    db_host: "{{ hostvars[groups[rds_db_instance][0]] }}"
+    requirements: "{{ home }}/requirements.txt"
 
 - name: Get DB Password
   include_vars: secrets.yml
@@ -38,15 +40,25 @@
 - name: Run Migrations
   environment:
     DATABASE_URL: "{{ db_url }}"
+    SECRET_KEY: "{{ secret_key }}"
+    DEBUG: False
+    EMAIL_HOST_USER: "{{ email_user }}"
+    EMAIL_HOST_PASSWORD: "{{ email_pass }}"
+    ALLOWED_HOSTS: "{{ allowed_hosts }}"
   django_manage:
     app_path: "{{ django_home }}"
-    settings: mysite.production
+    settings: imagersite.production
     command: migrate
 
 - name: Collect Static Files
   environment:
     DATABASE_URL: "{{ db_url }}"
+    SECRET_KEY: "{{ secret_key }}"
+    DEBUG: False
+    EMAIL_HOST_USER: "{{ email_user }}"
+    EMAIL_HOST_PASSWORD: "{{ email_pass }}"
+    ALLOWED_HOSTS: "{{ allowed_hosts }}"
   django_manage:
-    app_path: "{{ django_home }}"
-    settings: mysite.production
+    app_path: '{{ django_home }}'
+    settings: imagersite.production
     command: collectstatic
