@@ -21,8 +21,8 @@
     - gdal-bin
     - cgi-mapserver
 
-# - name: Clone Django Repository
-#   git: repo=https://github.com/tpeek/django-imager.git dest={{ django_home }} force=yes
+- name: Clone Django Repository
+  git: repo=https://github.com/tpeek/django-imager.git dest={{ home }} force=yes
 
 - name: Install Python Dependencies
   sudo: yes

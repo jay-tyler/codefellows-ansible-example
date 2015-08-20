@@ -1,3 +1,4 @@
+# {{ ansible_managed }}
 description "imagersite"
 
 start on (filesystem)
@@ -9,9 +10,11 @@ setgid nogroup
 chdir {{ django_home }}
 env DATABASE_URL="{{ db_url }}"
 env SECRET_KEY="{{ secret_key }}"
-env DEBUG="False"
+env DEBUG="True"
+env TEMPLATE_DEBUG="True"
 env EMAIL_HOST_USER="{{ email_user }}"
 env EMAIL_HOST_PASSWORD="{{ email_pass }}"
 env ALLOWED_HOSTS="{{ allowed_hosts }}"
 env DJANGO_SETTINGS_MODULE="imagersite.production"
-exec gunicorn -b 127.0.0.1:8000 -w 4 imagersite.wsgi:application --error-logfile /tmp/gunicorn-error.log
+
+exec gunicorn -b 127.0.0.1:8000 -w 4 imagersite.wsgi --error-logfile /tmp/gunicorn-error.log
