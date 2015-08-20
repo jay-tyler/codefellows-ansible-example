@@ -24,6 +24,14 @@
 - name: Clone Django Repository
   git: repo=https://github.com/tpeek/django-imager.git dest={{ home }} force=yes
 
+- name: Set Photos Owner to www-data User
+  sudo: yes
+  file: path={{ django_home }}/media/photo_files
+        owner=www-data
+        group=www-data
+        mode=0770 recurse=yes
+        state=directory
+
 - name: Install Python Dependencies
   sudo: yes
   pip:
